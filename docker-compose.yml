@@ -1,0 +1,30 @@
+version: "3.2"
+services:
+  mysql:
+    image: mysql:5.7
+    command:
+        [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--default-authentication-plugin=mysql_native_password",
+        ]
+    environment:
+        MYSQL_ROOT_PASSWORD: temp
+        MYSQL_ROOT_HOST: "%"
+        MYSQL_USERNAME: root
+        COMPOSE_CONVERT_WINDOWS_PATHS: 1
+    ports:
+        - "3306:3306"
+    volumes:
+        - ./sql:/docker-entrypoint-initdb.d
+        - ./my.cnf:/etc/mysql/my.cnf:ro
+    networks:
+        - common
+  ubuntu:
+    image: ubuntu:latest
+    command: [ "/bin/bash", "-c", "--", "while true; do sleep 30; done;" ]
+    networks:
+        - common
+
+networks:
+  common:
